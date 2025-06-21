@@ -21,4 +21,5 @@ dependencies = [
     "spaces",
     "xxhash",
     "datasets",
+    "python-dotenv",
 ]

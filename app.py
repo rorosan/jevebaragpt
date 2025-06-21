@@ -12,10 +12,10 @@ import soundfile as sf
 import spaces
 import xxhash
 from datasets import Audio
-
+from dotenv import load_dotenv
+load_dotenv()
 # Initialize Groq client
-#api_key = os.environ.get("GROQ_API_KEY")
-api_key = "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"
+api_key = os.getenv("GROQ_API_KEY")
 if not api_key:
     raise ValueError("Please set the GROQ_API_KEY environment variable.")
 client = groq.Client(api_key=api_key)
@@ -64,10 +64,15 @@ def transcribe_audio(client, file_name):
 # Function to generate AI chat response using Llama model
 def generate_chat_completion(client, history):
     messages = []
+    system_prompt = '''
+    In conversation with the user, ask questions to guess which type of housework he or she wants to do at his or her home.
+    Only ask *one question at a time*.
+    Try to get the neighbourbood in Abidjan, Ivory Coast. Also choose the main category between bricklayering and painting.
+    Try to determine Be conversational and natural'''
     messages.append(
         {
             "role": "system",
-            "content": "In conversation with the user, ask questions to estimate and provide (1) total calories, (2) protein, carbs, and fat in grams, (3) fiber and sugar content. Only ask *one question at a time*. Be conversational and natural.",
+            "content": system_prompt,
         }
     )
 
@@ -107,8 +112,7 @@ def response(state: AppState, audio: tuple):
     sf.write(file_name, audio[1], audio[0], format="wav")
 
     # Initialize Groq client
-    #api_key = os.environ.get("GROQ_API_KEY")
-    api_key = "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"
+    api_key = os.getenv("GROQ_API_KEY")
 
     if not api_key:
         raise ValueError("Please set the GROQ_API_KEY environment variable.")
